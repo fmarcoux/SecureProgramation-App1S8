@@ -31,26 +31,6 @@ try
     string myreader = sqlite_datareader.GetString(0);
     Console.WriteLine(myreader);
     connection.Close();
-
-
-    /*
-     var connection = new SqliteConnection(string.Format("Data Source={0}", path));
-    connection.Open();
-
-    var sqlite_cmd = connection.CreateCommand();
-    sqlite_cmd.CommandText = string.Format(tokenQueryString, guid.ToString().ToUpper());
-  
-    using (var reader = sqlite_cmd.ExecuteReader())
-    {
-        if (!reader.Read())
-        {
-            throw new Exception("No data");
-        }
-        string name = reader.GetString(0);
-        Console.WriteLine(name);
-    }
-
-    connection.Close();*/
 }
 catch (Exception)
 {    
