@@ -17,19 +17,19 @@ namespace CoupDeSonde.Controllers
             public int SurveyNumber { get; set; }
             //the answers are concatenated under a string form: 'abcd'
             public string Answers { get; set; }
-            //the questions of the surevy depends on the SurveyNumber
-            public string Question1 { get; }
-            public string Question2 { get; }
-            public string Question3 { get; }
-            public string Question4 { get; }
-
+            //the questions of the survey depend on the SurveyNumber
+            public string Question1 { get; set; }
+            public string Question2 { get; set; }
+            public string Question3 { get; set; }
+            public string Question4 { get; set; }
+            
             public Survey(int number)
             {
                 SurveyNumber = number;
                 Answers = "";
                 Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
                 Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
-
+                
                 if (SurveyNumber == 1)
                 {
                     Question3 = "3. Quel journal lisez-vous à la maison? a:La Presse, b:Le Journal de Montréal, c:The Gazette, d:Le Devoir\n\n";
@@ -62,7 +62,7 @@ namespace CoupDeSonde.Controllers
         }
         */
         
-        [HttpGet("getSondage")]
+        [HttpGet("sondage")]
         public ActionResult<IEnumerable<string>> GetSurvey()
         {
             //select and create randomly one of the two surveys
@@ -74,10 +74,10 @@ namespace CoupDeSonde.Controllers
             return Ok(requested);
         }
         
-        /*
-        [HttpPost("postSondage")]
+        
+        [HttpPost("sondage")]
         public ActionResult<string> PostSurvey([FromBody] Survey survey)
-        {
+        {/*
             if (HttpContext.Request.Headers.ContainsKey("X-API-KEY"))
             {
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
@@ -86,35 +86,39 @@ namespace CoupDeSonde.Controllers
                 string username = SurveyController.checkKey(apiKey);
 
                 if (username != "ERR")
-                {
-                    Console.WriteLine("Request received");
+                {*/
+            Console.WriteLine("Request received");
 
-                    string dbPath = Path.Combine(Environment.CurrentDirectory, "surveyResults.db");
-                    string connString = string.Format("Data Source={0}", dbPath);
-                    var connection = new SqliteConnection(connString);
-                    connection.Open();
-                    Console.WriteLine("Connection to DB established");
+            string dbPath = Path.Combine(Environment.CurrentDirectory, "surveyResults.db");
+            string connString = string.Format("Data Source={0}", dbPath);
+            var connection = new SqliteConnection(connString);
+            connection.Open();
+            Console.WriteLine("Connection to DB established");
 
-                    //SqliteDataReader sqlite_datareader;
-                    SqliteCommand sqlite_cmd;
-                    sqlite_cmd = connection.CreateCommand();
-                    sqlite_cmd.CommandText = String.Format($"INSERT INTO resultats(SurveyID,Answer)VALUES({survey.SurveyNumber},'{survey.Answers}')");
+            //SqliteDataReader sqlite_datareader;
+            SqliteCommand sqlite_cmd;
+            sqlite_cmd = connection.CreateCommand();
+            sqlite_cmd.CommandText = String.Format($"INSERT INTO resultats(SurveyID,Answer)VALUES({survey.SurveyNumber},'{survey.Answers}')");
 
-                    sqlite_cmd.ExecuteReader();
+            sqlite_cmd.ExecuteReader();
 
-                    return Ok("done");
+            return Ok();/*
                 }
                 else
                 {
-                    return "not submitted";
+                    return StatusCode(401);
                 }
 
             }
             else
             {
-                return "not sumbmitted";
-            }
+                return BadRequest();
+            }*/
 
-        }*/
+        }
+
+        [Route("/error")]
+        public IActionResult HandleError() =>
+            Problem();
     }
 }
