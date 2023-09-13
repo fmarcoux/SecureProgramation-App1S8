@@ -3,6 +3,8 @@ using Microsoft.Data.Sqlite;
 using System.Data;
 using System.Diagnostics;
 using System.Text;
+using System.Text.Json.Serialization;
+using static CoupDeSonde.Controllers.SurveyController;
 
 namespace CoupDeSonde.Controllers
 {
@@ -22,26 +24,32 @@ namespace CoupDeSonde.Controllers
             public string Question2 { get; set; }
             public string Question3 { get; set; }
             public string Question4 { get; set; }
-            
-            public Survey(int number)
+
+        }
+
+
+        public static void CreateSurvey(Survey inputSurvey, int surveyNumber)
+        {
+            if (surveyNumber == 1)
             {
-                SurveyNumber = number;
-                Answers = "";
-                Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
-                Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
-                
-                if (SurveyNumber == 1)
-                {
-                    Question3 = "3. Quel journal lisez-vous à la maison? a:La Presse, b:Le Journal de Montréal, c:The Gazette, d:Le Devoir\n\n";
-                    Question4 = "4. Combien de temps accordez-vous à la lecture de votre journal quotidiennement? a:Moins de 10 minutes; b:Entre 10 et 30 minutes, c:Entre 30 et 60 minutes, d:60 minutes ou plus\n\n";
-                }
-                else
-                {
-                    Question3 = "3. Combien de tasses de café buvez-vous chaque jour? a: Je ne bois pas de café, b:Entre 1 et 5 tasses, c: Entre 6 et 10 tasses, d: 10 tasses ou plus\n\n";
-                    Question4 = "4. Combien de consommations alcoolisées buvez-vous chaque jour? a: 0, b: 1, c: 2 ou 3, d: 3 ou plus\n\n";
-                }
+                inputSurvey.SurveyNumber = 1;
+                inputSurvey.Answers = "";
+                inputSurvey.Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
+                inputSurvey.Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
+                inputSurvey.Question3 = "3. Quel journal lisez-vous à la maison? a:La Presse, b:Le Journal de Montréal, c:The Gazette, d:Le Devoir\n\n";
+                inputSurvey.Question4 = "4. Combien de temps accordez-vous à la lecture de votre journal quotidiennement? a:Moins de 10 minutes; b:Entre 10 et 30 minutes, c:Entre 30 et 60 minutes, d:60 minutes ou plus\n\n";
+            }
+            else
+            {
+                inputSurvey.SurveyNumber = 2;
+                inputSurvey.Answers = "";
+                inputSurvey.Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
+                inputSurvey.Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
+                inputSurvey.Question3 = "3. Combien de tasses de café buvez-vous chaque jour? a: Je ne bois pas de café, b:Entre 1 et 5 tasses, c: Entre 6 et 10 tasses, d: 10 tasses ou plus\n\n";
+                inputSurvey.Question4 = "4. Combien de consommations alcoolisées buvez-vous chaque jour? a: 0, b: 1, c: 2 ou 3, d: 3 ou plus\n\n";
             }
         }
+
         /*
         static string checkKey(string key)
         {
@@ -61,7 +69,7 @@ namespace CoupDeSonde.Controllers
             return output;
         }
         */
-        
+
         [HttpGet("sondage")]
         public ActionResult<IEnumerable<string>> GetSurvey()
         {
@@ -70,13 +78,14 @@ namespace CoupDeSonde.Controllers
             int surveyNumber = rand.Next(1, 3);
             Console.WriteLine($"Submitting survey number {surveyNumber}");
 
-            Survey requested = new Survey(surveyNumber);
+            Survey requested = new Survey();
+            CreateSurvey(requested, surveyNumber);
             return Ok(requested);
         }
         
         
         [HttpPost("sondage")]
-        public ActionResult<string> PostSurvey([FromBody] Survey survey)
+        public ActionResult<string> PostSurvey(Survey survey)
         {/*
             if (HttpContext.Request.Headers.ContainsKey("X-API-KEY"))
             {
@@ -95,14 +104,14 @@ namespace CoupDeSonde.Controllers
             connection.Open();
             Console.WriteLine("Connection to DB established");
 
-            //SqliteDataReader sqlite_datareader;
             SqliteCommand sqlite_cmd;
             sqlite_cmd = connection.CreateCommand();
             sqlite_cmd.CommandText = String.Format($"INSERT INTO resultats(SurveyID,Answer)VALUES({survey.SurveyNumber},'{survey.Answers}')");
 
             sqlite_cmd.ExecuteReader();
 
-            return Ok();/*
+            return Ok();
+            /*
                 }
                 else
                 {
@@ -116,9 +125,5 @@ namespace CoupDeSonde.Controllers
             }*/
 
         }
-
-        [Route("/error")]
-        public IActionResult HandleError() =>
-            Problem();
     }
 }
