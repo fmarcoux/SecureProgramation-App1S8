@@ -1,2 +1,1 @@
-
-Code coverage : dotnet test --collect:
+Executer le script testAndCoverage.ps1 pour faire rouler tous les tests et générer le rapport de couverture
