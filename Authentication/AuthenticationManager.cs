@@ -38,7 +38,7 @@ namespace Authentication
         {
             //La base de données d'authentification doit se trouver toujours dans le même répertoire que l'exe,
             //Ça devrait être géré automatiquement
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Auth.BD");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, m_databaseName);
             Console.WriteLine(path);
             m_connection = new SQLiteConnection(string.Format("Data Source={0}", path));
             m_connection.Open();
