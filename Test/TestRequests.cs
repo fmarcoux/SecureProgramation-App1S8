@@ -87,6 +87,13 @@ namespace Test
             var response = apiController.PostSurvey(survey);
 
             Assert.IsType<UnauthorizedResult>(response.Result);
+
+            SurveyController.CreateSurvey(survey, 2);
+
+            var response2 = apiController.PostSurvey(survey);
+
+            Assert.IsType<UnauthorizedResult>(response2.Result);
+
         }
 
         [Fact]
