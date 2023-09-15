@@ -10,7 +10,6 @@ using System.Net;
 
 namespace Authentication
 {
-
     public class AuthenticationManager
     {
         private readonly string? m_guidString;
@@ -38,8 +37,7 @@ namespace Authentication
         {
             //La base de données d'authentification doit se trouver toujours dans le même répertoire que l'exe,
             //Ça devrait être géré automatiquement
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, m_databaseName);
-            Console.WriteLine(path);
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, m_databaseName);            
             m_connection = new SQLiteConnection(string.Format("Data Source={0}", path));
             m_connection.Open();
         }
