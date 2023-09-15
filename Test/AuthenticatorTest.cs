@@ -1,11 +1,4 @@
 ﻿using CoupDeSonde.Authentication;
-using Microsoft.AspNetCore.Http;
-using System.Reflection;
-using Moq;
-using CoupDeSonde;
-using CoupDeSonde.Controllers;
-using Castle.Core.Logging;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Test
 {
