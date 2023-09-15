@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Test
 {
+    /// <summary>
+    ///  Cette classe regroupe les tests de la classe qui implémente l'appel au service d'authentification
+    /// </summary>
     public class AuthenticatorTest
     {
         private KeyValuePair<string, string> VALID_COMBO = new KeyValuePair<string, string>("C6A39641-2F1D-45A3-8979-2115FAE82B04", "frank");
