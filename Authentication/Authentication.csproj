@@ -27,8 +27,8 @@
     </None>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="cd $(TargetDir)&#xD;&#xA;$(Obfuscar) .\obfuscar.xml" />
-  </Target>
+  </Target>-->
 
 </Project>
