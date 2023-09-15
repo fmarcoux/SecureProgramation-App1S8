@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using static CoupDeSonde.Controllers.SurveyController;
@@ -13,6 +14,8 @@ namespace CoupDeSonde.Controllers
 
     public class SurveyController : ControllerBase
     {
+        readonly AuthInterface _authenticator = new Authenticator();
+        
         public class Survey
         {
             //there are two possible surveys: 1 and 2
@@ -50,79 +53,84 @@ namespace CoupDeSonde.Controllers
             }
         }
 
-        /*
-        static string checkKey(string key)
-        {
-            
-            string pathToExe = "Path.exe";
-
-            Process process = new Process();
-            process.StartInfo.FileName = "Path.exe";
-            process.StartInfo.Arguments = key;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            //read the output of the key checker
-            string output = process.StandardOutput.ReadToEnd();
-
-            return output;
-        }
-        */
-
         [HttpGet("sondage")]
-        public ActionResult<IEnumerable<string>> GetSurvey()
-        {
-            //select and create randomly one of the two surveys
-            Random rand = new Random();
-            int surveyNumber = rand.Next(1, 3);
-            Console.WriteLine($"Submitting survey number {surveyNumber}");
-
-            Survey requested = new Survey();
-            CreateSurvey(requested, surveyNumber);
-            return Ok(requested);
-        }
-        
-        
-        [HttpPost("sondage")]
-        public ActionResult<string> PostSurvey(Survey survey)
-        {/*
+        public ActionResult<Survey> GetSurvey()
+        { 
             if (HttpContext.Request.Headers.ContainsKey("X-API-KEY"))
             {
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
 
                 //should check whether the key is good or not
-                string username = SurveyController.checkKey(apiKey);
+                string username = _authenticator.authenticate(apiKey);
+                Console.WriteLine(username);
 
                 if (username != "ERR")
-                {*/
-            Console.WriteLine("Request received");
+                {
+                    //select and create randomly one of the two surveys
+                    Random rand = new Random();
+                    int surveyNumber = rand.Next(1, 3);
+                    Console.WriteLine($"Submitting survey number {surveyNumber}");
 
-            string dbPath = Path.Combine(Environment.CurrentDirectory, "surveyResults.db");
-            string connString = string.Format("Data Source={0}", dbPath);
-            var connection = new SqliteConnection(connString);
-            connection.Open();
-            Console.WriteLine("Connection to DB established");
+                    Survey requested = new Survey();
+                    CreateSurvey(requested, surveyNumber);
+                    return Ok(requested);
 
-            SqliteCommand sqlite_cmd;
-            sqlite_cmd = connection.CreateCommand();
-            sqlite_cmd.CommandText = String.Format($"INSERT INTO resultats(SurveyID,Answer)VALUES({survey.SurveyNumber},'{survey.Answers}')");
-
-            sqlite_cmd.ExecuteReader();
-
-            return Ok();
-            /*
                 }
                 else
                 {
-                    return StatusCode(401);
+                    return Unauthorized();
                 }
 
             }
             else
             {
                 return BadRequest();
-            }*/
+            }
+        }
+        
+        
+        [HttpPost("sondage")]
+        public ActionResult<string> PostSurvey(Survey survey)
+        {
+            if (HttpContext.Request.Headers.ContainsKey("X-API-KEY"))
+            {
+                string apiKey = HttpContext.Request.Headers["X-API-KEY"];
+
+                //should check whether the key is good or not
+                string username = _authenticator.authenticate(apiKey);
+                Console.WriteLine(username);
+
+                if (username != "ERR")
+                {
+                    Console.WriteLine("Request received");
+
+                    string dbPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "surveyResults.db");
+
+                    //string dbPath = Path.Combine(Environment.CurrentDirectory, "surveyResults.db");
+                    string connString = string.Format("Data Source={0}", dbPath);
+                    var connection = new SqliteConnection(connString);
+                    connection.Open();
+                    Console.WriteLine("Connection to DB established");
+
+                    SqliteCommand sqlite_cmd;
+                    sqlite_cmd = connection.CreateCommand();
+                    sqlite_cmd.CommandText = String.Format($"INSERT INTO resultats(SurveyID,Answer)VALUES({survey.SurveyNumber},'{survey.Answers}')");
+
+                    sqlite_cmd.ExecuteReader();
+
+                    return Ok();
+            
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
 
         }
     }
