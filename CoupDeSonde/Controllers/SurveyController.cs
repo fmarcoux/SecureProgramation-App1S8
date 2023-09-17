@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using static CoupDeSonde.Controllers.SurveyController;
 
 namespace CoupDeSonde.Controllers
@@ -60,11 +61,14 @@ namespace CoupDeSonde.Controllers
             {
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
 
+                //Input validation to prevent injection attacks
+                bool valid = apiKeyInputValidator(apiKey);
+
                 //should check whether the key is good or not
                 string username = _authenticator.authenticate(apiKey);
                 Console.WriteLine(username);
 
-                if (username != "ERR")
+                if (username != "ERR" & valid)
                 {
                     //select and create randomly one of the two surveys
                     Random rand = new Random();
@@ -96,11 +100,16 @@ namespace CoupDeSonde.Controllers
             {
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
 
+                //Input validation to prevent injection attacks
+                bool valid = apiKeyInputValidator(apiKey);
+
                 //should check whether the key is good or not
                 string username = _authenticator.authenticate(apiKey);
                 Console.WriteLine(username);
 
-                if (username != "ERR")
+                bool valid = surveyInputValidator(survey.SurveyNumber, survey.Answers);
+
+                if (username != "ERR" & valid)
                 {
                     Console.WriteLine("Request received");
 
@@ -132,6 +141,33 @@ namespace CoupDeSonde.Controllers
                 return BadRequest();
             }
 
+        }
+        public bool apiKeyInputValidator(String apiKey)
+        {
+            // {83884C08-A054-4CA8-A3D5-4C2C23F48E70}
+            Regex validAPI = new Regex("^[a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*$");
+            if (validAPI.IsMatch(apiKey) & apiKey.Length == 37)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool surveyInputValidator(int surveyNumber, String answer)
+        {
+            // {83884C08-A054-4CA8-A3D5-4C2C23F48E70}
+            Regex validSurveyNumber = new Regex("^[0-9]*$");
+            Regex validAnswer = new Regex("^[a-zA-Z]*$");
+            if (validSurveyNumber.IsMatch(surveyNumber) & validAnswer.IsMatch(answer) & answer.Length == 4)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
