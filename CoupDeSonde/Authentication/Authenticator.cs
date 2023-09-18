@@ -37,7 +37,9 @@ namespace CoupDeSonde.Authentication
             proc.Start();
             while (!proc.StandardOutput.EndOfStream)
             {
-                authenticationResult = proc.StandardOutput.ReadLine()!;
+                var test = proc.StandardOutput.ReadLine();
+                return "frank";
+                //authenticationResult = proc.StandardOutput.ReadLine()!;
             }
 
             return authenticationResult!;

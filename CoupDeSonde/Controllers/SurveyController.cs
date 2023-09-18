@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using static CoupDeSonde.Controllers.SurveyController;
 
 namespace CoupDeSonde.Controllers
 {
@@ -76,6 +77,65 @@ namespace CoupDeSonde.Controllers
                     Survey requested = new Survey();
                     CreateSurvey(requested, surveyNumber);
                     return Ok(requested);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("sondageAll")]
+        public ActionResult<List<Survey>> GetAllSurvey()
+        {
+            if (HttpContext.Request.Headers.ContainsKey("X-API-KEY"))
+            {
+                string apiKey = HttpContext.Request.Headers["X-API-KEY"];
+
+                //Input validation to prevent injection attacks
+                bool valid = apiKeyInputValidator(apiKey);
+
+                //should check whether the key is good or not
+                string username = _authenticator.Authenticate(apiKey);
+                Console.WriteLine(username);
+
+                if (username != "ERREUR" & valid)
+                {
+                    //select and create randomly one of the two surveys
+                    Random rand = new Random();
+                    int surveyNumber = rand.Next(1, 3);
+                    Console.WriteLine($"Submitting survey number {surveyNumber}");
+
+                    string dbPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "surveyResults.db");
+
+                    string connString = string.Format("Data Source={0}", dbPath);
+                    var connection = new SqliteConnection(connString);
+                    connection.Open();
+                    Console.WriteLine("Connection to DB established");
+
+                    SqliteCommand sqlite_cmd;
+                    sqlite_cmd = connection.CreateCommand();
+                    sqlite_cmd.CommandText = String.Format($"Select * from resultats");
+                    var sqlite_datareader = sqlite_cmd.ExecuteReader();
+
+                    var surveyList = new List<Survey>();
+                    while (sqlite_datareader.Read())
+                    {
+                        string surveyNb = sqlite_datareader.GetString(0);
+                        string answer = sqlite_datareader.GetString(1);
+                        Survey survey = new Survey();
+                        CreateSurvey(survey, Int32.Parse(surveyNb));
+                        survey.Answers = answer;
+                        surveyList.Add(survey);
+                    }
+
+                   
+                    return Ok(surveyList);
 
                 }
                 else
@@ -89,8 +149,8 @@ namespace CoupDeSonde.Controllers
                 return BadRequest();
             }
         }
-        
-        
+
+
         [HttpPost("sondage")]
         public ActionResult<string> PostSurvey(Survey survey)
         {
@@ -128,9 +188,11 @@ namespace CoupDeSonde.Controllers
                     sqlite_cmd = connection.CreateCommand();
                     sqlite_cmd.CommandText = String.Format($"INSERT INTO resultats(SurveyID,Answer)VALUES({survey.SurveyNumber},'{survey.Answers}')");
 
+                    var sqlite_datareader = sqlite_cmd.ExecuteReader();
                     sqlite_cmd.ExecuteReader();
 
                     return Ok();         
+                   
                 }
                 else
                 {
@@ -182,14 +244,7 @@ namespace CoupDeSonde.Controllers
             }
         }
 
-        private bool authenticationIdValidator(string? guidFromAuthenticationService)
-        {
-            if (guidFromAuthenticationService == null) return false;
-
-            return Guid.TryParse(guidFromAuthenticationService, out _) ? true : false;
-        }
-        
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void SetAuthenticator(Authentification authenticator)
         {
             _authenticator = authenticator;
