@@ -10,6 +10,7 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using System;
+using CoupDeSonde.Authentication;
 
 namespace Test
 {
@@ -30,8 +31,12 @@ namespace Test
         [Fact]
         public void TestGetRequest_ValidAPIKeyShouldReturn200()
         {
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someValidKey");
 
             SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
             apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "secretKey";
@@ -46,7 +51,11 @@ namespace Test
         public void TestGetRequest_InvalidAPIKeyShouldReturn401()
         {
 
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("ERREUR");
+
             SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
             apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "noKey";
@@ -61,7 +70,12 @@ namespace Test
         public void TestGetRequest_noAPIKeyShouldReturn400()
         {
 
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someApiKey");
+
             SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
            
@@ -75,8 +89,12 @@ namespace Test
         [Fact]
         public void TestPostRequest_InvalidAPIKeyShouldReturn401()
         {
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("ERREUR");
 
             SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
             apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "noKey";
@@ -93,7 +111,12 @@ namespace Test
         public void TestPostRequest_noAPIKeyShouldReturn400()
         {
 
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someValidApiKey");
+
             SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
 
@@ -108,8 +131,12 @@ namespace Test
         [Fact]
         public void TestPostRequest_ValidAPIKeyShouldReturn200()
         {
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someValidApiKey");
 
             SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
             apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "secretKey";

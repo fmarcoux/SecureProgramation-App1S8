@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoupDeSonde.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Text.Json.Serialization;
-using static CoupDeSonde.Controllers.SurveyController;
+
 
 namespace CoupDeSonde.Controllers
 {
@@ -14,7 +13,7 @@ namespace CoupDeSonde.Controllers
      
     public class SurveyController : ControllerBase
     {
-        readonly AuthInterface _authenticator = new Authenticator();
+        Authentification _authenticator = new Authentication.Authenticator();
         
         public class Survey
         {
@@ -33,21 +32,19 @@ namespace CoupDeSonde.Controllers
 
         public static void CreateSurvey(Survey inputSurvey, int surveyNumber)
         {
+
+            inputSurvey.Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
+            inputSurvey.Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
+            inputSurvey.Answers = "";
+            inputSurvey.SurveyNumber = surveyNumber;
+
             if (surveyNumber == 1)
-            {
-                inputSurvey.SurveyNumber = 1;
-                inputSurvey.Answers = "";
-                inputSurvey.Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
-                inputSurvey.Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
+            {   
                 inputSurvey.Question3 = "3. Quel journal lisez-vous à la maison? a:La Presse, b:Le Journal de Montréal, c:The Gazette, d:Le Devoir\n\n";
                 inputSurvey.Question4 = "4. Combien de temps accordez-vous à la lecture de votre journal quotidiennement? a:Moins de 10 minutes; b:Entre 10 et 30 minutes, c:Entre 30 et 60 minutes, d:60 minutes ou plus\n\n";
             }
             else
             {
-                inputSurvey.SurveyNumber = 2;
-                inputSurvey.Answers = "";
-                inputSurvey.Question1 = "1. À quelle tranche d'âge appartenez-vous? a:0-25 ans, b:25-50 ans, c:50-75 ans, d:75 ans et plus\n\n";
-                inputSurvey.Question2 = "2. Êtes-vous une femme ou un homme? a:Femme, b:Homme, c:Je ne veux pas répondre\n\n";
                 inputSurvey.Question3 = "3. Combien de tasses de café buvez-vous chaque jour? a: Je ne bois pas de café, b:Entre 1 et 5 tasses, c: Entre 6 et 10 tasses, d: 10 tasses ou plus\n\n";
                 inputSurvey.Question4 = "4. Combien de consommations alcoolisées buvez-vous chaque jour? a: 0, b: 1, c: 2 ou 3, d: 3 ou plus\n\n";
             }
@@ -61,10 +58,10 @@ namespace CoupDeSonde.Controllers
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
 
                 //should check whether the key is good or not
-                string username = _authenticator.authenticate(apiKey);
+                string username = _authenticator.Authenticate(apiKey);
                 Console.WriteLine(username);
 
-                if (username != "ERR")
+                if (username != "ERREUR")
                 {
                     //select and create randomly one of the two surveys
                     Random rand = new Random();
@@ -97,10 +94,10 @@ namespace CoupDeSonde.Controllers
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
 
                 //should check whether the key is good or not
-                string username = _authenticator.authenticate(apiKey);
+                string username = _authenticator.Authenticate(apiKey);
                 Console.WriteLine(username);
 
-                if (username != "ERR")
+                if (username != "ERREUR")
                 {
                     Console.WriteLine("Request received");
 
@@ -132,6 +129,11 @@ namespace CoupDeSonde.Controllers
                 return BadRequest();
             }
 
+        }
+
+        public void SetAuthenticator(Authentification authenticator)
+        {
+            _authenticator = authenticator;
         }
     }
 }
