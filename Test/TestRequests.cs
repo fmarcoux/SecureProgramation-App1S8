@@ -39,7 +39,7 @@ namespace Test
 
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
-            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "secretKey";
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
 
             var response = apiController.GetSurvey();
 
@@ -58,7 +58,7 @@ namespace Test
             apiController.SetAuthenticator(AuthenticatorMoq.Object);
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
-            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "noKey";
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
 
             var response = apiController.GetSurvey();
 
@@ -97,10 +97,11 @@ namespace Test
 
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
-            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "noKey";
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
 
             SurveyController.Survey survey = new SurveyController.Survey();
             SurveyController.CreateSurvey(survey, 1);
+            survey.Answers = "abcd";
 
             var response = apiController.PostSurvey(survey);
 
@@ -139,15 +140,62 @@ namespace Test
 
             apiController.ControllerContext = new ControllerContext();
             apiController.ControllerContext.HttpContext = new DefaultHttpContext();
-            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "secretKey";
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
 
 
             SurveyController.Survey survey = new SurveyController.Survey();
             SurveyController.CreateSurvey(survey, 1);
+            survey.Answers = "abcd";
 
             var response = apiController.PostSurvey(survey);
 
             Assert.IsType<OkResult>(response.Result);
+        }
+
+        [Fact]
+        public void TestPostRequest_APIKeyButNotRightFormatShouldReturnBadRequest()
+        {
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someValidApiKey");
+
+            SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
+            apiController.ControllerContext = new ControllerContext();
+            apiController.ControllerContext.HttpContext = new DefaultHttpContext();
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "apiKeyMalFormatte";
+
+
+            SurveyController.Survey survey = new SurveyController.Survey();
+            SurveyController.CreateSurvey(survey, 1);
+            survey.Answers = "abcd";
+
+            var response = apiController.PostSurvey(survey);
+
+            Assert.IsType<BadRequestResult>(response.Result);
+        }
+
+        [Fact]
+        public void TestPostRequest_ValidAPIKeyButInvalidSurveyAnswerShouldReturnBadRequest()
+        {
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someValidApiKey");
+
+            SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
+            apiController.ControllerContext = new ControllerContext();
+            apiController.ControllerContext.HttpContext = new DefaultHttpContext();
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
+
+
+            SurveyController.Survey survey = new SurveyController.Survey();
+            SurveyController.CreateSurvey(survey, 2);
+            survey.Answers = "abcdefg"; //Longue réponse qui n'est pas acceptée
+
+            var response = apiController.PostSurvey(survey);
+
+            Assert.IsType<BadRequestResult>(response.Result);
         }
     }
 }

@@ -99,21 +99,26 @@ namespace CoupDeSonde.Controllers
                 string apiKey = HttpContext.Request.Headers["X-API-KEY"];
 
                 //Input validation to prevent injection attacks
-                bool valid = apiKeyInputValidator(apiKey);
+                if (!apiKeyInputValidator(apiKey))
+                {
+                    return BadRequest();
+                }
 
                 //should check whether the key is good or not
                 string username = _authenticator.Authenticate(apiKey);
                 Console.WriteLine(username);
 
-                bool valid = surveyInputValidator(survey.SurveyNumber, survey.Answers);
+                if(!surveyInputValidator(survey.SurveyNumber, survey.Answers))
+                {
+                    return BadRequest();
+                };
 
-                if (username != "ERREUR" & valid)
+                if (username != "ERREUR")
                 {
                     Console.WriteLine("Request received");
 
                     string dbPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "surveyResults.db");
 
-                    //string dbPath = Path.Combine(Environment.CurrentDirectory, "surveyResults.db");
                     string connString = string.Format("Data Source={0}", dbPath);
                     var connection = new SqliteConnection(connString);
                     connection.Open();
@@ -125,8 +130,7 @@ namespace CoupDeSonde.Controllers
 
                     sqlite_cmd.ExecuteReader();
 
-                    return Ok();
-            
+                    return Ok();         
                 }
                 else
                 {
@@ -138,39 +142,59 @@ namespace CoupDeSonde.Controllers
             {
                 return BadRequest();
             }
+        }
+        private bool apiKeyInputValidator(String apiKey)
 
-        }
-        public bool apiKeyInputValidator(String apiKey)
-        {
-            // {83884C08-A054-4CA8-A3D5-4C2C23F48E70}
-            Regex validAPI = new Regex("^[a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*$");
-            if (validAPI.IsMatch(apiKey) & apiKey.Length == 37)
-            {
-                return true;
+        {
+
+            // {83884C08-A054-4CA8-A3D5-4C2C23F48E70}
+            //Un peu mieux comme code : Guid.TryParse(apiKey)
+
+            Regex validAPI = new Regex(@"^[a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*[\-][a-zA-Z0-9]*$");
+
+            if (validAPI.IsMatch(apiKey) & apiKey.Length == 36)
+
+            {
+
+                return true;
+
             }
             else
             {
                 return false;
             }
         }
-        public bool surveyInputValidator(int surveyNumber, String answer)
-        {
-            // {83884C08-A054-4CA8-A3D5-4C2C23F48E70}
-            Regex validSurveyNumber = new Regex("^[0-9]*$");
-            Regex validAnswer = new Regex("^[a-zA-Z]*$");
-            if (validSurveyNumber.IsMatch(surveyNumber) & validAnswer.IsMatch(answer) & answer.Length == 4)
-            {
-                return true;
+        private bool surveyInputValidator(int surveyNumber, String answer)
+        {
+            // {83884C08-A054-4CA8-A3D5-4C2C23F48E70}
+
+            Regex validSurveyNumber = new Regex("^[0-9]*$");
+
+            Regex validAnswer = new Regex("^[a-zA-Z]*$");
+
+            if (validSurveyNumber.IsMatch(surveyNumber.ToString()) & validAnswer.IsMatch(answer) & answer.Length == 4)
+            {
+                return true;
             }
             else
             {
                 return false;
             }
         }
+
+        private bool authenticationIdValidator(string? guidFromAuthenticationService)
+        {
+            if (guidFromAuthenticationService == null) return false;
+
+            return Guid.TryParse(guidFromAuthenticationService, out _) ? true : false;
+        }
+        
 
         public void SetAuthenticator(Authentification authenticator)
         {
             _authenticator = authenticator;
         }
+
+
     }
 }
