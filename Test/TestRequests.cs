@@ -1,15 +1,7 @@
 using CoupDeSonde.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Moq;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
-using System.Collections.Specialized;
-using System.Security.Principal;
-using System.Net;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using System;
 using CoupDeSonde.Authentication;
 
 namespace Test
@@ -196,6 +188,87 @@ namespace Test
             var response = apiController.PostSurvey(survey);
 
             Assert.IsType<BadRequestResult>(response.Result);
+        }
+
+        [Fact]
+        public void TestGetRequestAll_ValidAPIKeyShouldReturn200()
+        {
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someValidKey");
+
+            SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
+            apiController.ControllerContext = new ControllerContext();
+            apiController.ControllerContext.HttpContext = new DefaultHttpContext();
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
+
+            var response = apiController.GetAllSurvey();
+
+            Assert.IsType<OkObjectResult>(response.Result);
+
+        }
+
+        [Fact]
+        public void TestGetRequestAll_InvalidAPIKeyShouldReturn401()
+        {
+
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("ERREUR");
+
+            SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+            apiController.ControllerContext = new ControllerContext();
+            apiController.ControllerContext.HttpContext = new DefaultHttpContext();
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AA1F-CAEE-42FC-BC17-C01E8720F81A";
+
+            var response = apiController.GetAllSurvey();
+
+            Assert.IsType<UnauthorizedResult>(response.Result);
+
+        }
+
+        [Fact]
+        public void TestGetAllRequest_noAPIKeyShouldReturn400()
+        {
+
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("someApiKey");
+
+            SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
+            apiController.ControllerContext = new ControllerContext();
+            apiController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+
+            var response = apiController.GetAllSurvey();
+
+            Assert.IsType<BadRequestResult>(response.Result);
+
+        }
+
+
+
+        [Fact]
+        public void TestGetAllRequestTest_noAPIKeyShouldReturn400()
+        {
+
+            var AuthenticatorMoq = new Mock<Authentification>();
+            AuthenticatorMoq.Setup(mock => mock.Authenticate(It.IsAny<string>())).Returns("ERREUR");
+
+            SurveyController apiController = new SurveyController();
+            apiController.SetAuthenticator(AuthenticatorMoq.Object);
+
+            apiController.ControllerContext = new ControllerContext();
+            apiController.ControllerContext.HttpContext = new DefaultHttpContext();
+            apiController.ControllerContext.HttpContext.Request.Headers["X-API-KEY"] = "4044AAE-42FCBC17-C01E8720F81A";
+
+            var response = apiController.GetSurvey();
+            var response2 = apiController.GetAllSurvey();
+
+            Assert.IsType<BadRequestResult>(response.Result);
+
         }
     }
 }
