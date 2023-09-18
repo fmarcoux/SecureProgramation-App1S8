@@ -11,7 +11,7 @@ namespace CoupDeSonde.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
+     
     public class SurveyController : ControllerBase
     {
         readonly AuthInterface _authenticator = new Authenticator();
