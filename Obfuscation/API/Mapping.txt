@@ -1,0 +1,113 @@
+Renamed Types:
+
+[CoupDeSonde]System.Runtime.CompilerServices.NullableAttribute -> [CoupDeSonde] . 
+{
+
+	[CoupDeSonde]System.Runtime.CompilerServices.NullableAttribute::.ctor[1]( [System.Runtime]System.Byte ) skipped:  special name
+	[CoupDeSonde]System.Runtime.CompilerServices.NullableAttribute::.ctor[1]( [System.Runtime]System.Byte[] ) skipped:  special name
+
+	System.Byte[] [CoupDeSonde]System.Byte[] System.Runtime.CompilerServices.NullableAttribute::NullableFlags ->  
+}
+
+[CoupDeSonde]System.Runtime.CompilerServices.NullableContextAttribute -> [CoupDeSonde] . 
+{
+
+	[CoupDeSonde]System.Runtime.CompilerServices.NullableContextAttribute::.ctor[1]( [System.Runtime]System.Byte ) skipped:  special name
+
+	System.Byte [CoupDeSonde]System.Byte System.Runtime.CompilerServices.NullableContextAttribute::Flag ->  
+}
+
+[CoupDeSonde]CoupDeSonde.Controllers.SurveyController -> [CoupDeSonde] . 
+{
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::CreateSurvey[2]( [CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey, [System.Runtime]System.Int32 ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::GetSurvey[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::GetAllSurvey[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::PostSurvey[1]( [CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::apiKeyInputValidator[1]( [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::surveyInputValidator[2]( [System.Runtime]System.Int32, [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::SetAuthenticator[1]( [CoupDeSonde]CoupDeSonde.Authentication.Authentification ) ->  
+
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController::.ctor[0]( ) skipped:  special name
+
+	CoupDeSonde.Authentication.Authentification [CoupDeSonde]CoupDeSonde.Authentication.Authentification CoupDeSonde.Controllers.SurveyController::_authenticator ->  
+}
+
+[CoupDeSonde]Program/<>c -> [CoupDeSonde] . / 
+{
+	[CoupDeSonde]Program/<>c::<<Main>$>b__0_0[1]( [Microsoft.AspNetCore.Mvc.Core]Microsoft.AspNetCore.Mvc.JsonOptions ) ->  
+
+	[CoupDeSonde]Program/<>c::.cctor[0]( ) skipped:  special name
+	[CoupDeSonde]Program/<>c::.ctor[0]( ) skipped:  special name
+
+	Program/<>c [CoupDeSonde]Program/<>c Program/<>c::<>9 ->  
+	System.Action`1<Microsoft.AspNetCore.Mvc.JsonOptions> [CoupDeSonde]System.Action`1<Microsoft.AspNetCore.Mvc.JsonOptions> Program/<>c::<>9__0_0 ->  
+}
+
+[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey -> [CoupDeSonde] . / 
+{
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::get_SurveyNumber[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::set_SurveyNumber[1]( [System.Runtime]System.Int32 ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::get_Answers[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::set_Answers[1]( [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::get_Question1[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::set_Question1[1]( [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::get_Question2[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::set_Question2[1]( [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::get_Question3[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::set_Question3[1]( [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::get_Question4[0]( ) ->  
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::set_Question4[1]( [System.Runtime]System.String ) ->  
+
+	[CoupDeSonde]CoupDeSonde.Controllers.SurveyController/Survey::.ctor[0]( ) skipped:  special name
+
+	System.Int32 [CoupDeSonde]System.Int32 CoupDeSonde.Controllers.SurveyController/Survey::<SurveyNumber>k__BackingField ->  
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::<Answers>k__BackingField ->  
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::<Question1>k__BackingField ->  
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::<Question2>k__BackingField ->  
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::<Question3>k__BackingField ->  
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::<Question4>k__BackingField ->  
+
+	System.Int32 [CoupDeSonde]System.Int32 CoupDeSonde.Controllers.SurveyController/Survey::SurveyNumber -> dropped
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::Answers -> dropped
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::Question1 -> dropped
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::Question2 -> dropped
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::Question3 -> dropped
+	System.String [CoupDeSonde]System.String CoupDeSonde.Controllers.SurveyController/Survey::Question4 -> dropped
+}
+
+[CoupDeSonde]CoupDeSonde.Authentication.Authenticator -> [CoupDeSonde] . 
+{
+	[CoupDeSonde]CoupDeSonde.Authentication.Authenticator::Authenticate[1]( [System.Runtime]System.String ) ->  
+	[CoupDeSonde]CoupDeSonde.Authentication.Authenticator::ServicePathGet[0]( ) ->  
+
+	[CoupDeSonde]CoupDeSonde.Authentication.Authenticator::.ctor[0]( ) skipped:  special name
+
+	System.String [CoupDeSonde]System.String CoupDeSonde.Authentication.Authenticator::m_authenticatorServicePath ->  
+	System.String [CoupDeSonde]System.String CoupDeSonde.Authentication.Authenticator::m_authenticatorServiceName ->  
+}
+
+[CoupDeSonde]Microsoft.CodeAnalysis.EmbeddedAttribute -> [CoupDeSonde] . 
+{
+
+	[CoupDeSonde]Microsoft.CodeAnalysis.EmbeddedAttribute::.ctor[0]( ) skipped:  special name
+}
+
+[CoupDeSonde]Program -> [CoupDeSonde] . 
+{
+	[CoupDeSonde]Program::<Main>$[1]( [System.Runtime]System.String[] ) ->  
+
+	[CoupDeSonde]Program::.ctor[0]( ) skipped:  special name
+}
+
+[CoupDeSonde]CoupDeSonde.Authentication.Authentification -> [CoupDeSonde] . 
+{
+	[CoupDeSonde]CoupDeSonde.Authentication.Authentification::Authenticate[1]( [System.Runtime]System.String ) ->  
+}
+
+Skipped Types:
+
+Renamed Resources:
+
+
+Skipped Resources:
+
