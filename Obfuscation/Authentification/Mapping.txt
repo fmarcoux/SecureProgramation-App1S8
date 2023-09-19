@@ -1,0 +1,48 @@
+Renamed Types:
+
+[Authentication]System.Runtime.CompilerServices.NullableAttribute -> [Authentication] . 
+{
+
+	[Authentication]System.Runtime.CompilerServices.NullableAttribute::.ctor[1]( [System.Runtime]System.Byte ) skipped:  special name
+	[Authentication]System.Runtime.CompilerServices.NullableAttribute::.ctor[1]( [System.Runtime]System.Byte[] ) skipped:  special name
+
+	System.Byte[] [Authentication]System.Byte[] System.Runtime.CompilerServices.NullableAttribute::NullableFlags ->  
+}
+
+[Authentication]System.Runtime.CompilerServices.NullableContextAttribute -> [Authentication] . 
+{
+
+	[Authentication]System.Runtime.CompilerServices.NullableContextAttribute::.ctor[1]( [System.Runtime]System.Byte ) skipped:  special name
+
+	System.Byte [Authentication]System.Byte System.Runtime.CompilerServices.NullableContextAttribute::Flag ->  
+}
+
+[Authentication]Authentication.AuthenticationManager -> [Authentication] . 
+{
+	[Authentication]Authentication.AuthenticationManager::ValidateAPIKey[1]( [System.Runtime]System.String ) ->  
+
+	[Authentication]Authentication.AuthenticationManager::.ctor[0]( ) skipped:  special name
+
+	System.String [Authentication]System.String Authentication.AuthenticationManager::tokenQueryString ->  
+}
+
+[Authentication]Microsoft.CodeAnalysis.EmbeddedAttribute -> [Authentication] . 
+{
+
+	[Authentication]Microsoft.CodeAnalysis.EmbeddedAttribute::.ctor[0]( ) skipped:  special name
+}
+
+[Authentication]Program -> [Authentication] . 
+{
+	[Authentication]Program::<Main>$[1]( [System.Runtime]System.String[] ) ->  
+
+	[Authentication]Program::.ctor[0]( ) skipped:  special name
+}
+
+Skipped Types:
+
+Renamed Resources:
+
+
+Skipped Resources:
+

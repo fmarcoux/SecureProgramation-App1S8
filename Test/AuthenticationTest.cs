@@ -12,7 +12,7 @@
         [Fact]
         public void TestAuthenticationManager_ValidAPIKeyShouldReturnValidName()
         {
-            Assert.True(Authentication.AuthenticationManager.ValidateAPIKey("4FB22B8A-61D4-47DB-AAAC-8FB7F133491F") == "gwenn");
+            Assert.True(Authentication.AuthenticationManager.ValidateAPIKey("C6A39641-2F1D-45A3-8979-2115FAE82B04") == "frank");
         }
 
         [Fact]

@@ -4,7 +4,7 @@ using System.Reflection;
 namespace CoupDeSonde.Authentication
 {
 
-    public class Authenticator : CHANGERLENOMSVP
+    public class Authenticator : Authentification
     {
         private readonly string m_authenticatorServicePath ;
         private readonly string m_authenticatorServiceName;

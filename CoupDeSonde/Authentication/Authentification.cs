@@ -1,6 +1,6 @@
 ﻿namespace CoupDeSonde.Authentication
 {
-    public interface CHANGERLENOMSVP
+    public interface Authentification
     {
         public string Authenticate(string ? guid);
     }
